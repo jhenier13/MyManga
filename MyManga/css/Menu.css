@@ -1,0 +1,40 @@
+@charset "utf-8";
+/* CSS Document */
+
+.espaciador { clear:both; }
+
+#menu_vertical
+{
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	background: #009933;
+	width: 200px;
+	float:left;
+}
+
+#menu_vertical li
+{
+	margin: 0;
+	padding: 0;
+	float:left;
+	width:100%;
+}
+
+#menu_vertical li a
+{
+	display: block;
+	line-height:40px;
+	padding: 0 15px;
+	border-bottom: #FFFFFF 1px solid;
+	color: #FFFFFF;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:16px;
+	text-decoration: none;
+}
+
+#menu_vertical li a:hover
+{
+	background: #006600;
+}
+
