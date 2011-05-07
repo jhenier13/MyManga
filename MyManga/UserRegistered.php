@@ -29,18 +29,23 @@
     <div id="contenido">
     	<p class="canal">
             <?php
-//                $fullName = $_POST['fullName'];
-//                $nickname = $_POST['nickname'];
-//                $password = $_POST['password'];
-//                $birthdate = $_POST['birthdate'];
-//                $email = $_POST['email'];
-//                $active = true;
-//                $link = mysql_connect("localhost", "root");
-//                mysql_select_db("sisweb",$link); //<---- cambiar la bd
-//                $sql = "INSERT INTO Users (fullName, nickname, password, birthdate, email, active)";
-//                $sql .= "VALUES ('$fullName','$nickname','$password','$birthdate','$email','$active')";
-//                $result = mysql_query($sql);
+                require("PHPCommon/Commons.php");
+                $fullName = $_POST['fullName'];
+                $nickname = $_POST['nickname'];
+                $password = $_POST['password'];
+                $birthdate = $_POST['birthdate'];
+                $email = $_POST['email'];
+                $query = "INSERT INTO users (FullName, Nickname, Password, Birthdate, EMail, AccountEnable)";
+                $query .= "VALUES ('$fullName','$nickname','$password','$birthdate','$email',1)";
+                $rowsAffected = ExecuteQuery($query);
+                if($rowsAffected)
+                {
                   echo "¡Gracias! Hemos recibido sus datos.\n"; 
+                }
+                else
+                {
+                    echo "Ha ocurrido un error al momento de registrar, nuestro equipo tecnico ya esta trabajando en el problema";
+                }
             ?>
            <br>
                <a href="Home.php" >regresar a la pagina principal</a>
