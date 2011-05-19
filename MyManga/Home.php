@@ -1,3 +1,17 @@
+<?php
+    session_start();
+    require("PHPCommon/User.php");
+    $user;
+    if(isset ($_SESSION["UserNickName"]))
+    {
+        $userAux = new User();
+        $user = $userAux->GetUser($_SESSION["UserNickName"]);
+    }
+    else
+    {
+        $user = new UserVisitor();
+    }
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -17,12 +31,10 @@
         
   </div>
     <div id="barra_izquierda">
-    	<ul id="menu_vertical">
-        	<li><a href="MainPage.html">Inicio</a></li>
-        	<li><a href="Login.php">Login</a></li>
-            <li><a href="UserRegister.php">Registarse</a></li>
-            <li><a href="#">Otras opciones</a></li>
-        </ul>
+    	<?php
+            $htmlStr = $user->GetAvailableOptions();
+            echo $htmlStr;
+        ?>
     </div>
     <div id="contenido">
     	<p class="canal">

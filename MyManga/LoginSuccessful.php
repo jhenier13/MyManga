@@ -1,4 +1,7 @@
-
+<?php
+    session_start();
+    require("PHPCommon/User.php");
+?>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -6,8 +9,12 @@
         <link href="css/Structure.css" rel="stylesheet" type="text/css" />
         <link href="css/Menu.css" rel="stylesheet" type="text/css" />
         <link href="css/Text.css" rel="stylesheet" type="text/css" />
-
-
+        <script language="javascript">
+            function ReturnPreviusPage()
+            {
+                document.location = "Home.php";
+            }
+        </script>
     </head>
 
     <body>
@@ -17,26 +24,31 @@
 
             </div>
             <div id="barra_izquierda">
-                <ul id="menu_vertical">
-                    <li><a href="MainPage.html">Inicio</a></li>
-                    <li><a href="Login.php">Login</a></li>
-                    <li><a href="UserRegister.php">Registarse</a></li>
-                    <li><a href="#">Otras opciones</a></li>
-                </ul>
+                <?php
+                    $user = new UserVisitor();
+                    $htmlStr = $user->GetAvailableOptions();
+                    echo $htmlStr;
+                ?>
             </div>
             <div id="contenido">
                 <p class="canal">
                     <?php
-                    require("PHPCommon/User.php");
                     $nick = $_POST["nickname"];
                     $password = $_POST["password"];
                     $user = new User();
                     $userExist = $user->UserExists($nick, $password);
                     if ($userExist) {
+                        $_SESSION["UserNickName"] = $nick;
                         echo "<FONT SIZE=4>Bienvenido nuevamente $nick</FONT>";
+                        echo "<br>";
+                        echo "Sera redirigido a la anterior pagina en 3 segundos";
+                        echo "<SCRIPT>
+                                setInterval(ReturnPreviusPage, 3000);
+                            </SCRIPT>";
                     } else {
                         echo "<FONT SIZE=4>$nick no te encuentras registrado</FONT>";
-                        //header("location:Login.php");
+                        echo "<br>";
+                        echo "<a href=\"Login.php\">Volver a intentar</a>";
                     }
                     ?>
                 </p>
