@@ -1,5 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<?php
+    session_start();
+    require("PHPCommon/Commons.php");
+    require("PHPCommon/User.php");
+?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -12,6 +16,12 @@
 <style type="text/css">
 @import "slidertron.css";
 </style>
+        <script language="javascript">
+            function ReturnPreviusPage()
+            {
+                document.location = "Home.php";
+            }
+        </script>
 </head>
 <body>
 <!-- end #header-wrapper -->
@@ -21,14 +31,9 @@
 </div>
 <div id="header">
 	<div id="menu">
-                <ul>
-			<li><a href="Home.php">Home</a></li>
-			<li ><a href="Series.php" >Series</a></li>
-			<li class="current_page_item"><a href="Descargas.php">Descargas</a></li>
-			<li><a href="#" class="first">Login</a> </li>
-			<li><a href="Registro.php">Registrarse</a></li>
-		</ul>
-            
+                <?php
+                    echo ShowUserOptions();
+                ?>
 	</div>
 	<!-- end #menu -->
 	<div id="search">
@@ -50,9 +55,10 @@
 		<div id="col2">
 			<div class="viewer">
 				<div class="reel">
-					<div class="slide"><img src="images/img104.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img107.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img108.jpg" width="726" height="335" alt="" /> <span></span> </div>
+                                    <?php
+                                    $headerStr = HeaderHTML();
+                                    echo $headerStr;
+                                    ?>
 				</div>
 			</div>
 		</div>
@@ -77,9 +83,33 @@
 	<div id="page-bgtop">
 		<div id="content">
 			<div class="post">
+                            <?php
+                                if(isset($_POST['nickname']))
+                                {
+                                    $nick = $_POST['nickname'];
+                                    $password = $_POST['password'];
+                                    $userTemp = new User();
+                                    $userExists = $userTemp->UserExists($nick, $password);
+                                    
+                                    if($userExists)
+                                    {
+                                        $_SESSION['Nickname']=$nick;
+                                        echo "$nick Bienvenido nuevamente... Seras redirigido automaticamente dentro de 5 segundos\n
+                                        <SCRIPT>\n
+                                                setInterval(ReturnPreviusPage, 5000);\n
+                                        </SCRIPT>\n";
+                                    }
+                                    else
+                                    {
+                                        echo "El nombre del usuario o el password es incorrecto <a href=\"Login.php\">Intente nuevamente</a>";
+                                    }
+                                }
+                                else
+                                {
+                            ?>
 				<h2 class="title"><a href="#"> Login </a></h2>
 				<div class="entry">
-                                    <form name="LoginForm" action="LoginSuccessful.php" method="POST" enctype="multipart/form-data"> 
+                                    <form name="LoginForm" action="Login.php" method="POST" enctype="multipart/form-data"> 
                                         <table> 
                                             <tr> 
                                                    <td>Nickname</td> 
@@ -96,6 +126,9 @@
                                         </table>   
                                    </form> 
                                 </div>
+                            <?php
+                                }
+                            ?>
 				
 			</div>
 			
@@ -103,33 +136,10 @@
 		<!-- end #content -->
 		<div id="sidebar">
 			<ul>
-				<li>
-					<h2>Recomendados</h2>
-					<ul>
-						<li><a href="#">Pandora Heart's</a></li>
-						<li><a href="#">Skip Beat!</a></li>
-						<li><a href="#">Fairy Tail</a></li>
-						<li><a href="#">Hunter x hunter</a></li>
-						<li><a href="#">Imouto</a></li>
-						<li><a href="#">Blue eyes</a></li>
-						<li><a href="#">Candy</a></li>
-						<li><a href="#">Paradise Kiss</a></li>
-					</ul>
-				</li>
-				<li>
-					<h2>los mejores mangas </h2>
-					<ul>
-						<li><a href="#">One Piece</a></li>
-						<li><a href="#">Berserk</a></li>
-						<li><a href="#">UxU</a></li>
-						<li><a href="#">Claymore</a></li>
-						<li><a href="#">Bakuman</a></li>
-						<li><a href="#">Air Gear</a></li>
-						<li><a href="#">Pandora Heart's</a></li>
-						<li><a href="#">NANA</a></li>
-					</ul>
-				</li>
-				
+				<?php
+                                    echo ShowRecomendantions();
+                                    echo ShowBestMangas();
+                                ?>
 			</ul>
 		</div>
 		<!-- end #sidebar -->

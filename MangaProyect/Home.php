@@ -1,5 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<?php
+    session_start();
+    require("PHPCommon/Commons.php");
+    require("PHPCommon/User.php")
+?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -20,22 +24,18 @@
 </div>
 <div id="header">
 	<div id="menu">
-		<ul>
-			<li><a href="#" class="first">Home</a></li>
-			<li class="current_page_item"><a href="Series.php">Series</a></li>
-			<li><a href="Descargas.php">Descargas</a></li>
-			<li><a href="Login.php">Login</a></li>
-			<li><a href="Registro.php">Registrarse</a></li>
-		</ul>
+            <?php
+                echo ShowUserOptions();
+            ?>
 	</div>
 	<!-- end #menu -->
-	<div id="search">
+	<!--<div id="search">
 		<form method="get" action="">
 			<fieldset>
 				<input type="text" name="s" id="search-text" size="15" />
 			</fieldset>
 		</form>
-	</div>
+	</div>-->
 	<!-- end #search -->
 </div>
 <!-- end #header -->
@@ -48,21 +48,10 @@
 		<div id="col2">
 			<div class="viewer">
 				<div class="reel">
-					<div class="slide"><img src="images/img104.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img107.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img108.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img110.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img111.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img112.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img113.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img114.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img115.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img116.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img117.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img118.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img119.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img120.jpg" width="726" height="335" alt="" /> <span></span> </div>
-
+                                    <?php
+                                        $headerStr = HeaderHTML();
+                                        echo $headerStr;
+                                    ?>
                                 </div>
 			</div>
 		</div>
@@ -108,32 +97,12 @@
 		<!-- end #content -->
 		<div id="sidebar">
 			<ul>
-				<li>
-					<h2>Recomendados</h2>
-					<ul>
-						<li><a href="#">Pandora Heart's</a></li>
-						<li><a href="#">Skip Beat!</a></li>
-						<li><a href="#">Fairy Tail</a></li>
-						<li><a href="#">Hunter x hunter</a></li>
-						<li><a href="#">Imouto</a></li>
-						<li><a href="#">Blue eyes</a></li>
-						<li><a href="#">Candy</a></li>
-						<li><a href="#">Paradise Kiss</a></li>
-					</ul>
-				</li>
-				<li>
-					<h2>los mejores mangas </h2>
-					<ul>
-						<li><a href="#">One Piece</a></li>
-						<li><a href="#">Berserk</a></li>
-						<li><a href="#">UxU</a></li>
-						<li><a href="#">Claymore</a></li>
-						<li><a href="#">Bakuman</a></li>
-						<li><a href="#">Air Gear</a></li>
-						<li><a href="#">Pandora Heart's</a></li>
-						<li><a href="#">NANA</a></li>
-					</ul>
-				</li>
+				<?php
+                                    echo ShowRecomendantions();
+                                
+                                    echo ShowBestMangas();
+                                ?>
+				
 				
 			</ul>
 		</div>

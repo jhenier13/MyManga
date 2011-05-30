@@ -10,10 +10,16 @@ class User{
     
     function UserExists($nick, $password)
     {
-        require("Commons.php");
-        $query ="SELECT * FROM users WHERE Nickname='$nick' AND Password='$password'";
-        $numRows = ExecuteQuery($query);
-        return $numRows;
+        $query ="SELECT * FROM Users WHERE Nickname='$nick' AND Password='$password'";
+        $data = GetData($query);
+        if(count($data)>0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     
     function GetAvailableOptions()
@@ -21,35 +27,29 @@ class User{
         
     }
     
-    function GetUser($userNick)
+    function LoadData($nick)
     {
-        if($userNick=="Administrador")
+        $query = "SELECT * FROM Users WHERE Nickname='$nick'";
+        $data = GetData($query);
+        if(count($data)>0)
         {
-            $userAdmin = new UserAdministrator();
-            return $userAdmin;
-        }
-        else
-        {
-            if($userNick=="")
-            {
-                $userVisitor = new UserVisitor();
-                return $userVisitor;
-            }
-            else
-            {
-                $userRegistered = new UserRegistered();
-                return $userRegistered;
-            }
+            $this->fullName = $data[0]["FullName"];
+            $this->nick = $data[0]["Nickname"];
+            $this->EMail = $data[0]["EMail"];
+            $this->birthDate = $data[0]["Birthdate"];
+            $this->password = $data[0]["Password"];
         }
     }
 }
 
 class UserVisitor extends User{
     function GetAvailableOptions() {
-        $optionsHtml = "<ul id=\"menu_vertical\">
-                            <li><a href=\"Home.html\">Inicio</a></li>
+        $optionsHtml = "<ul>
+                            <li><a href=\"Home.php\">Home</a></li>
+                            <li><a>Series</a></li>
+                            <li><a>Descargas</a></li>
                             <li><a href=\"Login.php\">Login</a></li>
-                            <li><a href=\"UserRegister.php\">Registarse</a></li>
+                            <li><a href=\"Registro.php\">Registrarse</a></li>
                         </ul>";
         return $optionsHtml;
     }
@@ -57,12 +57,14 @@ class UserVisitor extends User{
 
 class UserRegistered extends User{
     function GetAvailableOptions() {
-        $optionsHtml = "<ul id=\"menu_vertical\">
-                            <li><a href=\"Home.html\">Inicio</a></li>
+        $optionsHtml = "<ul>
+                            <li><a href=\"Home.php\">Home</a></li>
+                            <li><a>Series</a></li>
+                            <li><a>Descargas</a></li>
                             <li><a href=\"ViewMangas.php\">Ver mis mangas</a></li>
-                            <li><a href=\"ViewUser.php\">Ver Perfil</a></li>
+                            <li><a href=\"VerPerfil.php\">Ver Perfil</a></li>
                             <li><a href=\"UploadManga.php\">Subir capitulo</a></li>
-                            <li><a href=\"Logout.php\">Cerrar sesion</a></li>
+                            <li><a href=\"Logout.php\">Log out</a></li>
                         </ul>";
         return $optionsHtml;
     }
@@ -70,11 +72,13 @@ class UserRegistered extends User{
 
 class UserAdministrator extends User{
     function GetAvailableOptions() {
-        $optionsHtml = "<ul id=\"menu_vertical\">
-                            <li><a href=\"Home.html\">Inicio</a></li>
+        $optionsHtml = "<ul>
+                            <li><a href=\"Home.php\">Inicio</a></li>
+                            <li><a>Series</a></li>
+                            <li><a>Descargas</a></li>
                             <li><a href=\"AdminUsers.php\">Usuarios de MyManga</a></li>
                             <li><a href=\"ViewMangas.php\">Todos los mangas</a></li>
-                            <li><a href=\"Logout.php\">Cerrar sesion</a></li>
+                            <li><a href=\"Logout.php\">Log out</a></li>
                         </ul>";
         return $optionsHtml;
     }

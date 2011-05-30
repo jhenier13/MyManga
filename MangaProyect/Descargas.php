@@ -47,9 +47,11 @@
 		<div id="col2">
 			<div class="viewer">
 				<div class="reel">
-					<div class="slide"><img src="images/img104.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img107.jpg" width="726" height="335" alt="" /> <span></span> </div>
-					<div class="slide"><img src="images/img108.jpg" width="726" height="335" alt="" /> <span></span> </div>
+					<?php
+                                        require("PHPCommon/Commons.php");
+                                        $headerStr = HeaderHTML();
+                                        echo $headerStr;
+                                    ?>
 				</div>
 			</div>
 		</div>

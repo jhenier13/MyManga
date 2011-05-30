@@ -89,7 +89,7 @@ hr { display: none; }
 
 #menu {
 	float: left;
-	width: 500px;
+	/*width: 500px;*/
 	height: 68px;
 }
 

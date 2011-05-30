@@ -18,26 +18,30 @@
 </style>
 
 <script language="javascript">
+    function EnableAllFields()
+    {
+        document.UserViewForm.fullName.disabled=false;
+        document.UserViewForm.password.disabled=false;
+        document.UserViewForm.rePassword.disabled=false;
+        document.UserViewForm.email.disabled=false;
+        document.UserViewForm.birthdate.disabled=false;
+        document.UserViewForm.register.disabled=false;
+        document.UserViewForm.cleaner.disabled=false;
+        document.UserViewForm.avatarFile.disabled = false;
+    }
+    
     function ValidateUserFields()
     {
-        var fullName = document.UserRegisterForm.fullName.value;
-        var nickName = document.UserRegisterForm.nickname.value;
-        var userPass = document.UserRegisterForm.password.value;
-        var rewritedPass = document.UserRegisterForm.rePassword.value;
-        var email = document.UserRegisterForm.email.value;
-        var birthdate = document.UserRegisterForm.birthdate.value;
-        var termsAccepted = document.UserRegisterForm.acceptTerms.checked;
+        var fullName = document.UserViewForm.fullName.value;
+        var userPass = document.UserViewForm.password.value;
+        var rewritedPass = document.UserViewForm.rePassword.value;
+        var email = document.UserViewForm.email.value;
+        var birthdate = document.UserViewForm.birthdate.value;
 
-        if(termsAccepted)
-        {
             var error = "";
             if(fullName.length==0)
             {
                 error = error + "El nombre no puede estar vacio. \n";
-            }
-            if(nickName.length<7)
-            {
-                error = error + "El nick debe tener más de 6 caracteres. \n";
             }
             if(userPass.length<5)
             {
@@ -56,18 +60,13 @@
             
             if(error.length==0)
             {
-                document.UserRegisterForm.submit();
+                document.UserViewForm.submit();
             }
             else
             {
                 alert(error);
             }
         }
-        else
-        {
-            alert("No ha aceptado los terminos de uso asi que no puede registrarse");
-        }
-    }
 </script>
 
 
@@ -140,97 +139,126 @@
                         $fullName = ltrim($fullName);
                         $fullName = rtrim($fullName);
                         $fullName = ucwords($fullName);
-                        $nickname = $_POST['nickname'];
-                        $nickname = ltrim($nickname);
-                        $nickname = rtrim($nickname);
+                        $nickname = $_SESSION['Nickname'];
                         $password = $_POST['password'];
                         $birthdate = $_POST['birthdate'];
                         $email = $_POST['email'];
-                        $userExists = UserNicknameExists($nickname);
-                        
-                        if($userExists)
+
+                        $query = "UPDATE Users 
+                                  SET FullName='$fullName', Password='$password', Birthdate='$birthdate', EMail='$email'
+                                  WHERE Nickname='$nickname'";
+                            
+                        $fileSize = $_FILES["avatarFile"]["size"];
+                        if($fileSize>10000)
                         {
-                            echo "<CENTER><FONT>El nick $nickname ya se encuentra registrado en nuestro sistema. <a href=\"Registro.php\"> Intente Nuevamente</a></FONT></CENTER>\n";
+                            echo "El avatar no puede exceder el tamaño de 10 KB ";
                         }
                         else
                         {
-                            $query = "INSERT INTO Users (FullName, Nickname, Password, Birthdate, EMail, AccountEnable)";
-                            $query .= "VALUES ('$fullName','$nickname','$password','$birthdate','$email',1)";
-                            
-                            $fileSize = $_FILES["avatarFile"]["size"];
-                            if($fileSize>10000)
+                            $rowsAffected = ExecuteQuery($query);
+                            if($rowsAffected)
                             {
-                                echo "El avatar no puede exceder el tamaño de 10 KB ";
+                                $avatarFile = $_FILES["avatarFile"]["tmp_name"]; 
+                                move_uploaded_file($avatarFile, "Avatars/$nickname.jpg");
+                                echo "Sus datos han sido modificados correctamente.\n"; 
                             }
                             else
                             {
-                                $rowsAffected = ExecuteQuery($query);
-                                if($rowsAffected)
-                                {
-                                    $avatarFile = $_FILES["avatarFile"]["tmp_name"]; 
-                                    move_uploaded_file($avatarFile, "Avatars/$nickname.jpg");
-                                    echo "¡Gracias! Hemos recibido sus datos.\n"; 
-                                }
-                                else
-                                {
-                                    echo "Ha ocurrido un error al momento de registrar, nuestro equipo tecnico ya esta trabajando en el problema";
-                                }
+                                echo "Ha ocurrido un error al momento de modificar los datos, nuestro equipo tecnico ya esta trabajando en el problema";
                             }
                         }
-                    ?>
-                    <?php
                     }
                     else
                     {
+                        $userTemp = new User();
+                        $userTemp->LoadData($_SESSION["Nickname"]);
                     ?>
-                        <h2 class="title"><a href="#"> Registrate </a></h2>
+                        <h2 class="title"><a href="#"> Ver perfil </a></h2>
                         <div class="entry">
-                                <p><strong>Ven </strong> y registrate, es gratuito, donde encontraras el manga de tu preferencia.
-
-                                    <FORM name="UserRegisterForm"  ACTION ="Registro.php"  METHOD= POST  enctype= multipart/form-data  >  
+                                    <FORM name="UserViewForm"  ACTION ="VerPerfil.php"  METHOD= POST  enctype= multipart/form-data  >  
                                             <table> 
+                                                <tr>
+                                                    <td colspan="2" height="150">
+                                                        Avatar actual<br>
+                                                        <?php
+                                                            $fileExists = fopen("Avatars/$userTemp->nick.jpg","r");
+                                                            if($fileExists)
+                                                            {
+                                                                echo "<img width=100 src=\"Avatars/$userTemp->nick.jpg\"></img>";
+                                                            }
+                                                            else
+                                                            {
+                                                                echo "<FONT color=red>No tienes un avatar seleccionado</FONT>";
+                                                            }
+                                                        ?>
+                                                    </td> 
+                                                </tr>
                                                 <tr> 
-                                                       <td> Nombre Completo
+                                                       <td> Nombre Completo</td>
+                                                       <td>
+                                                           <?php
+                                                               echo "<input type=text name=fullName value=\"$userTemp->fullName\" disabled>";
+                                                           ?>
                                                        </td> 
-                                                       <td> <input type= text  name= fullName > </td> 
                                                 </tr> 
                                                 <tr> 
                                                        <td> Nombre de usuario 
                                                            <br>
                                                             (más de 6 caracteres)
                                                        </td> 
-                                                       <td><input type= text  name= nickname  ></td> 
+                                                       <td>
+                                                           <?php
+                                                           echo "<input type=text name=nickname value=$userTemp->nick disabled>";
+                                                           ?>
+                                                       </td> 
                                                 </tr> 
                                                 <tr> 
                                                         <td>Contraseña
                                                             <br>
                                                             (más de 4 caracteres)
                                                         </td> 
-                                                        <td><input type= text  name= password ></td> 
+                                                        <td>
+                                                            <?php
+                                                                echo "<input type=password name=password value=$userTemp->password disabled>";
+                                                            ?>
+                                                        </td>
                                                 </tr> 
                                                 <tr> 
                                                         <td>Reescribir contraseña </td> 
-                                                        <td><input type= text  name="rePassword"  ></td> 
+                                                        <td>
+                                                            <?php
+                                                                echo "<input type=password name=rePassword value=$userTemp->password disabled>";
+                                                            ?>
+                                                        </td>
                                                 </tr> 
                                                 <tr> 
                                                         <td>Correo electronico  </td> 
-                                                        <td><input type= text  name= email  ></td> 
+                                                        <td>
+                                                            <?php
+                                                                 echo "<input type=text name=email value=$userTemp->EMail disabled>";
+                                                            ?>
+                                                        </td> 
                                                 </tr> 
                                                 <tr> 
                                                         <td>Fecha de nacimiento (aaaa/mm/dd) </td> 
-                                                        <td><input type= text  name= birthdate  ></td> 
+                                                        <td>
+                                                            <?php
+                                                                echo "<input type=text name=birthdate value=$userTemp->birthDate disabled>";
+                                                            ?>
+                                                        </td>
                                                 </tr> 
                                                 <tr> 
                                                         <td>Avatar</td> 
-                                                        <td><input type= file name= avatarFile ></td> 
+                                                        <td><input type= file name= avatarFile disabled></td> 
                                                 </tr> 
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <input type="button" value="Habilitar para modificacion" onclick="EnableAllFields()">
+                                                    </td>
+                                                </tr>
                                                 <tr> 
-                                                        <td>Acepto</td> 
-                                                        <td><input type=checkbox name= acceptTerms > Los <a target="blank" href="Terminos.html">terminos</a>  de MyManga</td> 
-                                                </tr> 
-                                                <tr> 
-                                                        <td><input type="reset" value="Limpiar"> </td>
-                                                        <td><input type =button name = register value = Registrar onclick="ValidateUserFields()" ></td> 
+                                                        <td><input type="reset" name="cleaner" value="Limpiar" disabled ></td>
+                                                        <td><input type =button name = register value = Modificar onclick="ValidateUserFields()" disabled ></td> 
                                                 </tr>
                                             </table> 
                                        </FORM>
