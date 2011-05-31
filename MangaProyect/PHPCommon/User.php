@@ -14,7 +14,15 @@ class User{
         $data = GetData($query);
         if(count($data)>0)
         {
-            return true;
+            $userSelected = $data[0]["Nickname"];
+            if($userSelected=="Administrador" || $data[0]["AccountEnable"])
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
@@ -40,16 +48,26 @@ class User{
             $this->password = $data[0]["Password"];
         }
     }
+    
+    function ChangeOtherUserState($nick, $newState)
+    {
+        
+    }
+    
+    function ChangeMangaEnabling($mangaid, $enabled)
+    {
+        
+    }
+    
 }
 
 class UserVisitor extends User{
     function GetAvailableOptions() {
         $optionsHtml = "<ul>
-                            <li><a href=\"Home.php\">Home</a></li>
-                            <li><a>Series</a></li>
+                            <li><a href=\"/MangaProyect/Manga/MangaSeries.php?begin=0\">Series</a></li>
                             <li><a>Descargas</a></li>
-                            <li><a href=\"Login.php\">Login</a></li>
-                            <li><a href=\"Registro.php\">Registrarse</a></li>
+                            <li><a href=\"/MangaProyect/Login.php\">Login</a></li>
+                            <li><a href=\"/MangaProyect/Registro.php\">Registrarse</a></li>
                         </ul>";
         return $optionsHtml;
     }
@@ -58,31 +76,48 @@ class UserVisitor extends User{
 class UserRegistered extends User{
     function GetAvailableOptions() {
         $optionsHtml = "<ul>
-                            <li><a href=\"Home.php\">Home</a></li>
-                            <li><a>Series</a></li>
+                            <li><a href=\"/MangaProyect/Manga/MangaSeries.php?begin=0\">Series</a></li>
                             <li><a>Descargas</a></li>
-                            <li><a href=\"ViewMangas.php\">Ver mis mangas</a></li>
-                            <li><a href=\"VerPerfil.php\">Ver Perfil</a></li>
-                            <li><a href=\"UploadManga.php\">Subir capitulo</a></li>
-                            <li><a href=\"Logout.php\">Log out</a></li>
+                            <li><a href=\"/MangaProyect/VerPerfil.php\">Ver Perfil</a></li>
+                            <li><a href=\"/MangaProyect/Manga/MisMangas.php\">Subir manga</a></li>
+                            <li><a href=\"/MangaProyect/Logout.php\">Log out</a></li>
                         </ul>";
         return $optionsHtml;
+    }
+    
+    function GetMangaUploadOptions()
+    {
+        $subOptionsHtml = "<ul>
+                             <li><a href=\"/MangaProyect/Manga/MisMangas.php\">Ver mis mangas</a></li>
+                             <li><a href=\"/MangaProyect/Manga/NuevoManga.php\">Nuevo manga</a></li>
+                             <li><a href=\"/MangaProyect/Manga/NuevoCapitulo.php\">Subir capitulo</a></li>
+                           </ul>";
+        return $subOptionsHtml;
     }
 }
 
 class UserAdministrator extends User{
     function GetAvailableOptions() {
         $optionsHtml = "<ul>
-                            <li><a href=\"Home.php\">Inicio</a></li>
-                            <li><a>Series</a></li>
+                            <li><a href=\"/MangaProyect/Manga/MangaSeries.php?begin=0\">Series</a></li>
                             <li><a>Descargas</a></li>
-                            <li><a href=\"AdminUsers.php\">Usuarios de MyManga</a></li>
-                            <li><a href=\"ViewMangas.php\">Todos los mangas</a></li>
-                            <li><a href=\"Logout.php\">Log out</a></li>
+                            <li><a href=\"/MangaProyect/AdminUsuarios.php\">Usuarios de MyManga</a></li>
+                            <li><a href=\"/MangaProyect/Manga/AdminManga.php\">Todos los mangas</a></li>
+                            <li><a href=\"/MangaProyect/Logout.php\">Log out</a></li>
                         </ul>";
         return $optionsHtml;
     }
+    
+    function ChangeOtherUserState($nick, $newState) {
+        $query = "UPDATE Users SET AccountEnable=$newState WHERE Nickname='$nick'";
+        ExecuteQuery($query);
+    }
+    
+    function ChangeMangaEnabling($mangaid, $enabled) {
+        $query = "UPDATE Mangas 
+                  SET Enable=$enabled 
+                  WHERE MangaID=$mangaid ";
+        ExecuteQuery($query);
+    }
 }
-
-
 ?>
