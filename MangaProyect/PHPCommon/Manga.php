@@ -125,7 +125,7 @@
         
         function TheUserUploadTheChapter($title, $uploader,$mangaid)
         {
-            $query = "SELECT * FROM Chapters WHERE Title=$title AND Uploader=$uploader AND MangaID=$mangaid ";
+            $query = "SELECT * FROM Chapters WHERE Title='$title' AND Uploader='$uploader' AND MangaID=$mangaid ";
             $data = GetData($query);
             if(count($data)>0)
             {

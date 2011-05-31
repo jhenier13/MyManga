@@ -113,7 +113,7 @@
                                 $chapterTemp->hasDownload = 0;
                                 $mangaName = $arrayTemp[1];
 
-                                if($chapterTemp->title=="")
+                                if(!$chapterTemp->title=="")
                                 {
                                     if($chapterTemp->TheUserUploadTheChapter($chapterTemp->title, $chapterTemp->uploader, $chapterTemp->mangaID))
                                     {
