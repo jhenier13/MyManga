@@ -1,7 +1,8 @@
 <?php
     session_start();
     require("../PHPCommon/Commons.php");
-    require("../PHPCommon/User.php")
+    require("../PHPCommon/User.php");
+    require("../PHPCommon/Manga.php");
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -13,7 +14,21 @@
 <script type="text/javascript" src="../jquery/jquery.slidertron-0.1.js"></script>
 <link href="../style.css" rel="stylesheet" type="text/css" media="screen" />
 <link href="../slidertron.css" rel="stylesheet" type="text/css" media="screen" />
-
+<script language="javascript">
+    numberActualImages = 5;
+    function AddImageFileInput()
+    {
+        var imagesContainer = document.getElementById("imagesToUpload");
+        var newFileInput = document.createElement("input");
+        newFileInput.type = "file";
+        numberActualImages = numberActualImages+1;
+        newFileInput.name="image"+numberActualImages;
+        document.ChapterForm.numberImages.value=numberActualImages;
+        imagesContainer.appendChild(newFileInput);
+        var espacio = document.createElement("br");
+        imagesContainer.appendChild(espacio);
+    }
+</script>
 </head>
 <body>
 <!-- end #header-wrapper -->
@@ -82,8 +97,104 @@
                             echo $userRegistered->GetMangaUploadOptions();
                         ?>
                     </div>
-                    <div>
-                        Nuevo capitulo
+                    <div id="subcontent">
+                        <?php
+                            if(isset($_POST["chapterTitle"]))
+                            {
+                                $chapterTemp = new Chapter();
+                                $mangaidTemp = $_POST["mangasId"];
+                                $arrayTemp = explode("|", $mangaidTemp,2);
+                                $chapterTemp->mangaID= $arrayTemp[0];
+                                $chapterTemp->title = $_POST["chapterTitle"];
+                                $numberImages = $_POST["numberImages"];
+                                $chapterTemp->uploader = $_SESSION["Nickname"];
+                                $chapterTemp->uploadDate = date("Y-m-d");
+                                $chapterTemp->numberImages = $numberImages;
+                                $chapterTemp->hasDownload = 0;
+                                $mangaName = $arrayTemp[1];
+
+                                if($chapterTemp->title=="")
+                                {
+                                    if($chapterTemp->TheUserUploadTheChapter($chapterTemp->title, $chapterTemp->uploader, $chapterTemp->mangaID))
+                                    {
+                                        echo "Este usuario ya ha subio este episodio, no puede subirlo nuevamente, intente subiendolo como V2";
+                                    }
+                                    else
+                                    {
+                                        $chapterTemp->Save();
+                                        $folderPath = "../UploadMangas/$mangaName/$chapterTemp->uploader/$chapterTemp->title";
+                                        if(!is_dir($folderPath))
+                                        {
+                                            mkdir($folderPath,0777,true);
+                                        }
+
+                                        for($i=1;$i<=$numberImages;$i++)
+                                        {
+                                            $imageNameAux = "image$i";
+                                            $tempImagePath= $_FILES[$imageNameAux]["tmp_name"];
+                                            if($tempImagePath!="")
+                                            {
+                                                $newImagePath = "$folderPath/$imageNameAux.jpg";
+                                                move_uploaded_file($tempImagePath, $newImagePath);
+                                            }
+                                        }
+
+                                        echo "El capitulo ha sido subido exitosamente";
+                                    }
+                                }
+                                else
+                                {
+                                    echo "El capitulo no tiene TITULO";
+                                }
+                            }
+                            else
+                            {
+                        ?>
+                        <form name="ChapterForm" action="NuevoCapitulo.php" method="POST" enctype="multipart/form-data">
+                            <table width="100%">
+                                <tr>
+                                    <td>(*)Manga</td>
+                                    <td>
+                                        <?php
+                                            echo GetAllMangasComboBox();
+                                        ?>
+                                        <br>
+                                        No hay el manga que buscas? entonces crealo <a href="NuevoManga.php">AQUI</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>(*)Nombre capitulo</td>
+                                    <td><input type="text" name="chapterTitle"></input></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        Imagenes a subir (No pueden ser mayores de 1 MB);
+                                        <div id="imagesToUpload">
+                                            <input type="file" name="image1" ><br>
+                                            <input type="file" name="image2"><br>
+                                            <input type="file" name="image3"><br>
+                                            <input type="file" name="image4"><br>
+                                            <input type="file" name="image5"><br>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="hidden" name="numberImages" value="5">
+                                    </td>
+                                    <td ><input type="button" value="Agregar otra imagen para subir" onclick="AddImageFileInput()"  ></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><input type="reset" value="LIMPIAR"></input><input type="submit" value="ACEPTAR"></td>
+                                </tr>
+                            </table>    
+                        </form>
+                        
+                        <?php
+                            }
+                        ?>
                     </div>
 		</div>
 		<!-- end #content -->

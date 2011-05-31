@@ -105,6 +105,37 @@
                 return false;
             }
         }
+    }
+    
+    class Chapter{
+        var $chapterID;
+        var $mangaID;
+        var $title;
+        var $numberImages;
+        var $uploader;
+        var $uploadDate;
+        var $hasDownload;
+        
+        function Save()
+        {
+            $query = "INSERT INTO Chapters(MangaID, Title,NumberImages,Uploader,UploadDate,HasDownload) 
+                      VALUES ($this->mangaID,'$this->title', $this->numberImages, '$this->uploader', '$this->uploadDate', $this->hasDownload) ";
+            ExecuteQuery($query);
+        }
+        
+        function TheUserUploadTheChapter($title, $uploader,$mangaid)
+        {
+            $query = "SELECT * FROM Chapters WHERE Title=$title AND Uploader=$uploader AND MangaID=$mangaid ";
+            $data = GetData($query);
+            if(count($data)>0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         
     }
 ?>

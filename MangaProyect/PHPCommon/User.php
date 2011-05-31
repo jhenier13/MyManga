@@ -65,7 +65,6 @@ class UserVisitor extends User{
     function GetAvailableOptions() {
         $optionsHtml = "<ul>
                             <li><a href=\"/MangaProyect/Manga/MangaSeries.php?begin=0\">Series</a></li>
-                            <li><a>Descargas</a></li>
                             <li><a href=\"/MangaProyect/Login.php\">Login</a></li>
                             <li><a href=\"/MangaProyect/Registro.php\">Registrarse</a></li>
                         </ul>";
@@ -77,7 +76,6 @@ class UserRegistered extends User{
     function GetAvailableOptions() {
         $optionsHtml = "<ul>
                             <li><a href=\"/MangaProyect/Manga/MangaSeries.php?begin=0\">Series</a></li>
-                            <li><a>Descargas</a></li>
                             <li><a href=\"/MangaProyect/VerPerfil.php\">Ver Perfil</a></li>
                             <li><a href=\"/MangaProyect/Manga/MisMangas.php\">Subir manga</a></li>
                             <li><a href=\"/MangaProyect/Logout.php\">Log out</a></li>
@@ -100,7 +98,6 @@ class UserAdministrator extends User{
     function GetAvailableOptions() {
         $optionsHtml = "<ul>
                             <li><a href=\"/MangaProyect/Manga/MangaSeries.php?begin=0\">Series</a></li>
-                            <li><a>Descargas</a></li>
                             <li><a href=\"/MangaProyect/AdminUsuarios.php\">Usuarios de MyManga</a></li>
                             <li><a href=\"/MangaProyect/Manga/AdminManga.php\">Todos los mangas</a></li>
                             <li><a href=\"/MangaProyect/Logout.php\">Log out</a></li>

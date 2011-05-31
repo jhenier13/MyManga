@@ -119,7 +119,7 @@
     
     function ShowAllUsersTable()
     {
-        $query = "SELECT * FROM Users ";
+        $query = "SELECT * FROM Users ORDER BY Nickname ASC ";
         $data = GetData($query);
         $htmlStr = "<TABLE width=100% height=100%>";
         $rowsCount = count($data);
@@ -242,7 +242,7 @@
     
     function ShowMangasForAdmin()
     {
-        $query = "SELECT * FROM Mangas";
+        $query = "SELECT * FROM Mangas ORDER BY MangaName ASC";
         $data = GetData($query);
         $numberRows = count($data);
         $tableHTML = "<TABLE width=100%>";
@@ -277,7 +277,7 @@
             $limiteInferior=0;
         }
         $limiteSuperior = $limiteInferior + 10;
-        $query = "SELECT * FROM Mangas WHERE Enable=1 LIMIT $limiteInferior , $limiteSuperior ";
+        $query = "SELECT * FROM Mangas WHERE Enable=1 ORDER BY MangaName ASC LIMIT $limiteInferior , $limiteSuperior ";
         $data = GetData($query);
         $numberRows = count($data);
         $contentHTML = "<ul>";
@@ -314,6 +314,44 @@
         else
             $contentHTML.="<a href=\"MangaSeries.php?begin=$newlimiteInferior\">Anterior</a>      <a href=\"MangaSeries.php?begin=$limiteSuperior\">Siguiente</a>";
         
+        return $contentHTML;
+    }
+    
+    function GetAllMangasComboBox()
+    {
+        $query = "SELECT * FROM Mangas WHERE Enable=1 ORDER BY MangaName ASC";
+        $data = GetData($query);
+        $numberRows = count($data);
+        $contentHTML = "<SELECT name=mangasId length=1 >";
+        
+        for($i=0;$i<$numberRows;$i++)
+        {
+            $mangaTemp = new Manga("","","","","","");
+            $mangaTemp->LoadDataRow($data[$i]);
+            $contentHTML.="\n<OPTION value=\"$mangaTemp->mangaID|$mangaTemp->mangaName\">$mangaTemp->mangaName</OPTION>";
+        }
+        
+        $contentHTML.="</SELECT>";
+        return $contentHTML;
+    }
+    
+    function  ShowMangaChapters($mangaid)
+    {
+        $query = "SELECT * FROM Mangas M, Chapters C WHERE M.MangaID=C.MangaID AND M.MangaID=$mangaid ORDER BY C.UploadDate DESC, C.Title DESC ";
+        $data = GetData($query);
+        $numberChapters = count($data);
+        $contentHTML = "<TABLE width=100%>";
+        for($i=0;$i<$numberChapters;$i++)
+        {
+            $chapterID = $data[$i]["ChapterID"];
+            $uploader = $data[$i]["Uploader"];
+            $chapterTitle = $data[$i]["Title"];
+            $contentHTML.="<tr>
+                                <td><a href=\"VerCapituloManga.php?chapterid=$chapterID\">$chapterTitle</a></td>
+                                <td>$uploader</td>
+                           </tr>";
+        }
+        $contentHTML.="</TABLE>";
         return $contentHTML;
     }
 ?>
