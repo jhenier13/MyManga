@@ -14,21 +14,6 @@
 <script type="text/javascript" src="../jquery/jquery.slidertron-0.1.js"></script>
 <link href="../style.css" rel="stylesheet" type="text/css" media="screen" />
 <link href="../slidertron.css" rel="stylesheet" type="text/css" media="screen" />
-<script language="javascript">
-    numberActualImages = 5;
-    function AddImageFileInput()
-    {
-        var imagesContainer = document.getElementById("imagesToUpload");
-        var newFileInput = document.createElement("input");
-        newFileInput.type = "file";
-        numberActualImages = numberActualImages+1;
-        newFileInput.name="image"+numberActualImages;
-        document.ChapterForm.numberImages.value=numberActualImages;
-        imagesContainer.appendChild(newFileInput);
-        var espacio = document.createElement("br");
-        imagesContainer.appendChild(espacio);
-    }
-</script>
 </head>
 <body>
 <!-- end #header-wrapper -->

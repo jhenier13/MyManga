@@ -1,9 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <?php
     session_start();
-    require("../PHPCommon/Commons.php");
-    require("../PHPCommon/User.php");
-    require("../PHPCommon/Manga.php");
+    require("PHPCommon/Commons.php");
+    require("PHPCommon/User.php")
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -11,8 +10,8 @@
 <title>My Manga</title>
 <meta name="keywords" content="" />
 <meta name="description" content="" />
-<script type="text/javascript" src="../jquery/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="../jquery/jquery.slidertron-0.1.js"></script>
+<script type="text/javascript" src="jquery/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="jquery/jquery.slidertron-0.1.js"></script>
 <link href="style.css" rel="stylesheet" type="text/css" media="screen" />
 <link href="LectorManga.css" rel="stylesheet" type="text/css" media="screen" />
 
@@ -20,7 +19,7 @@
 <body>
 <!-- end #header-wrapper -->
 <div id="logo">
-	<h1><a href="../Home.php"> My Manga </a></h1>
+	<h1><a href="#home.php"> My Manga </a></h1>
 	<p><em> </p>
 </div>
 <div id="header">
@@ -43,13 +42,11 @@
 		<div id="col2">
 			<div class="viewer">
 				<div class="reel">
-                                    <?php
-                                        if(isset($_GET["chapterid"]))
-                                        {
-                                            $chapterid = $_GET["chapterid"];
-                                            echo ReadManga($chapterid);
-                                        }
-                                    ?>
+                                        <div class="slide"><img src="images/fondoManga.jpg" width="726" height="935" alt="" /> <span>IMAGEN 1</span> </div>
+					<div class="slide"><img src="images/fondoManga.jpg" width="726" height="935" alt="" /> <span>IMAGEN 2</span> </div>c
+					<div class="slide"><img src="images/fondoManga.jpg" width="726" height="935" alt="" /> <span>IMAGEN 3</span> </div>c
+					<div class="slide"><img src="images/fondoManga.jpg" width="726" height="935" alt="" /> <span>IMAGEN 4</span> </div>c
+
                                 </div>
 			</div>
 		</div>

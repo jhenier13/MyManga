@@ -340,7 +340,26 @@
         $query = "SELECT * FROM Mangas M, Chapters C WHERE M.MangaID=C.MangaID AND M.MangaID=$mangaid ORDER BY C.UploadDate DESC, C.Title DESC ";
         $data = GetData($query);
         $numberChapters = count($data);
-        $contentHTML = "<TABLE width=100%>";
+        $manga = new Manga("","","","","","");
+        $manga->LoadDataRow($data[0]);
+        $mangaGenres = "";
+         $numberGenres = count($manga->genres);
+         for($j=0;$j<$numberGenres;$j++)
+         {
+             $singleGenre = $manga->genres[$j];
+             $mangaGenres.="$singleGenre,";
+         }
+        $shortSummary = substr($manga->summary, 0, 70);
+        $contentHTML = "<TABLE width=100%>
+                                <tr><td colspan=2><TABLE width=100%>
+                                <tr><td rowspan=5><img width=80 src=\"../MangaImages/$manga->mangaName.jpg\"></img></td>
+                                    <td>$manga->mangaName</td>
+                                </tr>
+                                <tr><td>Mangaka: $manga->mangaka</td></tr>
+                                <tr><td>Estado: $manga->status</td></tr>
+                                <tr><td>Generos: $mangaGenres</td></tr>
+                                <tr><td>Sinopsis: $shortSummary...</td></tr>
+                                </TABLE></td><tr>";
         for($i=0;$i<$numberChapters;$i++)
         {
             $chapterID = $data[$i]["ChapterID"];
@@ -352,6 +371,31 @@
                            </tr>";
         }
         $contentHTML.="</TABLE>";
+        return $contentHTML;
+    }
+    
+    function ReadManga($chapterid)
+    {
+        $query = "SELECT * FROM Mangas M, Chapters C WHERE M.MangaID=C.MangaID AND C.ChapterID=$chapterid ";
+        $data = GetData($query);
+        $contentHTML="";
+        
+        if(count($data)>0)
+        {
+            $mangaName = $data[0]["MangaName"];
+            $chapterTitle = $data[0]["Title"];
+            $numberImages = $data[0]["NumberImages"];
+            $uploader = $data[0]["Uploader"];
+            
+            $imagesPath = "../UploadMangas/$mangaName/$uploader/$chapterTitle/image";
+            
+            for($i=1;$i<=$numberImages;$i++)
+            {
+                $contentHTML.="<div class=\"slide\"><img src=\"$imagesPath$i.jpg\" width=\"726\" height=\"935\" alt=\"\" /> <span>IMAGEN $i</span> </div>";
+            }
+            
+        }
+        
         return $contentHTML;
     }
 ?>
